@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import apiConnection from '../../apiConnection';
 import { apiEndpoints, httpMethods } from '../../constant';
 import Notify from '../common/Notify';
-import { getCookie, setSession } from '../../utils/getCookie';
+//import { getCookie, setSession } from '../../utils/getCookie';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
@@ -12,7 +13,7 @@ export default function Login() {
         email: '',
         password: ''
   })
-
+  const navigate = useNavigate()
   const setFormData = (e) => {
     setLogInFormData({...logInFormData, [e.target.name]: e.target.value})
   }
@@ -28,8 +29,9 @@ export default function Login() {
         e.preventDefault();
         const data = await apiConnection(apiEndpoints.LOGIN_USER_ENDPOINT,httpMethods.POST,logInFormData)
         if(data.status === 200){
-            setShowNotify(true)
-            setNotifyData({...notifyData, message: data.data.message, type: 'success' })
+              //setShowNotify(true)
+            //setNotifyData({...notifyData, message: data.data.message, type: 'success' })
+            navigate('/dashboard')
         } else {
           setShowNotify(true)
           setNotifyData({...notifyData, message: 'ERROR: Please reload your application', type: 'danger' })

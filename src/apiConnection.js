@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getCookie } from "./utils/getCookie";
 
-const apiConnection = async (endpoint, method, payload = null) => {
+const apiConnection = async (endpoint, method, payload = null, headers = {}) => {
     return await axios({
         method,
         url: `http://127.0.0.1:8000${endpoint}`,
@@ -10,7 +10,8 @@ const apiConnection = async (endpoint, method, payload = null) => {
         },
         withCredentials: true,
         headers: {
-            Authorization: `Bearer ${getCookie('token')}`
+            Authorization: `Bearer ${getCookie('token')}`,
+            ...headers
         }
 
     })
