@@ -8,6 +8,8 @@ import Banners from "./components/pages/Banners";
 import Products from "./components/pages/Products";
 import AddBanner from "./components/pages/AddBanner";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import EditBanner from "./components/pages/EditBanner";
+import AddProduct from "./components/pages/AddProduct";
 
 export default function AppRoutes() {
 
@@ -21,6 +23,8 @@ export default function AppRoutes() {
             <Route path='/banners' element={<Banners />} />
             <Route path='/products' element={<Products />} />
             <Route path='/add-banner' element={<AddBanner />} />
+            <Route path='/edit-banner' element={<EditBanner />} />
+            <Route path='/add-product' element={<AddProduct />} />
           </Route>
     </Routes>
   );
