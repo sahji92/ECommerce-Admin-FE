@@ -115,7 +115,7 @@ export default function EditBanner() {
             </Form.Group>
 
             {bannerImage && <div className='position-relative w-50'>
-                <img className='img-fluid' src={(typeof(bannerImage) === 'string') ? bannerImage : URL.createObjectURL(bannerImage)}></img>
+                <img className='img-fluid' src={(typeof(bannerImage) === 'string') ? bannerImage : URL.createObjectURL(bannerImage)} alt=''></img>
                 <div onClick={removeBannerImage} className='position-absolute top-0 end-0 bg-danger text-light m-1 px-1'>&#10005;</div>
             </div>}
 

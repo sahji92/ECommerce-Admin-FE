@@ -8,7 +8,10 @@ export const apiEndpoints = {
     GET_BANNER_ENDPOINT: '/get-banner',
     UPDATE_BANNER_ENDPOINT: '/update-banner',
     UPLOAD_PRODUCT_IMAGES_ENDPOINT: '/upload-product-images',
-    ADD_PRODUCT_ENDPOINT: '/add-product'
+    ADD_PRODUCT_ENDPOINT: '/add-product',
+    GET_PRODUCTS_ENDPOINT: '/get-products',
+    GET_PRODUCT_ENDPOINT: '/get-product',
+    UPDATE_PRODUCT_ENDPOINT: '/update-product'
 }
 
 export const httpMethods = {

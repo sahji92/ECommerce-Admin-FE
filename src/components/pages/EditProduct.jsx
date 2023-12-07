@@ -1,20 +1,18 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import apiConnection from '../../apiConnection';
 import { apiEndpoints, httpMethods } from '../../constant';
 import Notify from '../common/Notify';
+import { useLocation } from 'react-router-dom';
 
-export default function AddProduct() {
+export default function EditProduct() {
 
-  const [productData, setProductData] = useState({
-    name:'',
-    description:'',
-    category: '',
-    price: '',
-    discountedPrice: '',
-    productImages: {}
-  })
+  const useQuery = () => new URLSearchParams(useLocation().search);
+
+  let query = useQuery();
+
+  const [productData, setProductData] = useState({})
 
   const [showNotify,setShowNotify] = useState(false)
   const [notifyData,setNotifyData] = useState({
@@ -25,6 +23,9 @@ export default function AddProduct() {
   const uploadBannerImageReference = useRef();
 
   const [productImages, setProductImages] = useState([])
+
+  const [uploadedProductImages, setUploadedProductImages] = useState([])
+
 
   const setFormData = (e) => {
     setProductData({...productData, [e.target.name]: e.target.value})
@@ -39,15 +40,21 @@ export default function AddProduct() {
     setProductImages([...newProductImages])
   }
 
+  const removeUploadedProductImage = (idx) => {
+    const newProductImages = uploadedProductImages.filter((item,index) =>  index !== idx )
+    setUploadedProductImages([...newProductImages])
+  }
+
   const handleUploadBannerClick = () => {
     uploadBannerImageReference.current.click();
   }
 
   const productImagesUpload = async () => {
     console.log(productImages)
-    if(productImages.length <= 0){
+    if(uploadedProductImages.length <= 0 && productImages.length <= 0){
         setShowNotify(true)
         setNotifyData({...notifyData, message: 'ERROR: Please upload product images', type: 'danger' })
+        return;
     }
     let images = {}
     productImages.forEach((image,index)=>{
@@ -61,21 +68,40 @@ export default function AddProduct() {
     }
   }
 
-  const addProduct = async (e) => {
+  const createUpdatedImageObject = (alreadyUploadedImages, newUploadedImages) => {
+    let updatedImages = {}
+    let initialImageCount = 0;
+    if(alreadyUploadedImages.length > 0){
+        alreadyUploadedImages.forEach((item,index) => {
+            updatedImages[`productImage${initialImageCount}`] = item
+            initialImageCount++
+        })
+    }
+    let newUploadedImagesValuesArray = Object.values(newUploadedImages)
+    if(newUploadedImagesValuesArray.length) {
+        newUploadedImagesValuesArray.forEach((item,index) => {
+            updatedImages[`productImage${initialImageCount}`] = item
+            initialImageCount++
+        })
+    }
+    return updatedImages;
+  }
+
+
+  const editProduct = async (e) => {
     try {
         e.preventDefault();
         console.log(productData);
         const productImagesUploadData= await productImagesUpload()
         if(!productImagesUploadData.status){
             setShowNotify(true)
-            setNotifyData({...notifyData, message: 'ERROR: Banner image upload failed', type: 'danger' })
+            setNotifyData({...notifyData, message: 'ERROR: Product image upload failed', type: 'danger' })
             return;
         }
-        console.log('Data after image upload', productData)
-        console.log('Data after image upload', productImagesUploadData.data)
-        const data = await apiConnection(apiEndpoints.ADD_PRODUCT_ENDPOINT,httpMethods.POST,{...productData, productImages: productImagesUploadData.data})
+        let updatedProductImages = createUpdatedImageObject(uploadedProductImages, productImagesUploadData.data)
+        const data = await apiConnection(`${apiEndpoints.UPDATE_PRODUCT_ENDPOINT}/${query.get('productId')}`,httpMethods.PUT,{...productData, productImages: updatedProductImages})
         console.log(data)
-        if(data.status === 201){
+        if(data.status === 200){
             reset()
             setShowNotify(true)
             setNotifyData({...notifyData, message: data.data.message, type: 'success' })
@@ -102,9 +128,24 @@ export default function AddProduct() {
     setProductImages([])
   }
 
+  const getProduct = async () => {
+    const data = await apiConnection(`${apiEndpoints.GET_PRODUCT_ENDPOINT}/${query.get('productId')}`,httpMethods.GET)
+    if(data.status === 200){
+        setProductData({...data.data.data[0]})
+        setUploadedProductImages([...Object.values(data.data.data[0].productImages).map(item => item)])
+    } else {
+        console.log(data)
+    }
+  }
+
+  useEffect(()=>{
+    getProduct()
+  },[])
+
+
   return (
-    <div className='addProduct w-100 p-2'>
-        <h2>Add product form</h2>
+    <div className='editProduct w-100 p-2'>
+        <h2>Edit product form</h2>
         <hr></hr>
         <Form className='w-75 ms-4 mt-5'>
             <Form.Group className="mb-3" controlId="formName">
@@ -132,6 +173,13 @@ export default function AddProduct() {
                 <Form.Control value={productData.discountedPrice} name='discountedPrice' type="number" placeholder="Enter product discounted price" onChange={(e) => setFormData(e)}/>
             </Form.Group>
 
+            {(uploadedProductImages.length > 0) && uploadedProductImages.map((item,index)=>{
+                return <div className='position-relative w-25 d-inline-block m-2' key={index}>
+                    <img className='img-fluid' src={item} alt=''></img>
+                    <div onClick={()=>removeUploadedProductImage(index)} className='position-absolute top-0 end-0 bg-danger text-light m-1 px-1'>&#10005;</div>
+                </div>
+            })}
+
             {(productImages.length > 0) && productImages.map((item,index)=>{
                 return <div className='position-relative w-25 d-inline-block m-2' key={index}>
                     <img className='img-fluid' src={URL.createObjectURL(item)} alt=''></img>
@@ -144,8 +192,8 @@ export default function AddProduct() {
                 <Form.Control ref={uploadBannerImageReference} name='banner' className='d-none' type="file" onChange={(e)=>uploadProductImages(e)} multiple/>
             </Form.Group>
 
-            <Button variant="primary" type="submit" onClick={(e)=>addProduct(e)}>
-                Add Product
+            <Button variant="primary" type="submit" onClick={(e)=>editProduct(e)}>
+                Edit Product
             </Button>
         </Form>
         { showNotify && <Notify message={notifyData.message} type={notifyData.type} setShowNotify={setShowNotify}/>}

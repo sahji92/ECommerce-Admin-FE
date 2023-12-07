@@ -45,7 +45,7 @@ export default function Signup() {
   }
 
   return (
-    <div className='signUp w-m-25 p-5 border border-dark m-5'>
+    <div className='signUp d-flex align-items-center justify-content-center' style={{"min-height":"100vh"}}>
         <Form>
             <Form.Group className="mb-3" controlId="formName">
                 <Form.Label>Enter name</Form.Label>

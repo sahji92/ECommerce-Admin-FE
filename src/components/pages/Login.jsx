@@ -45,7 +45,7 @@ export default function Login() {
 
 
   return (
-    <div className='logIn w-m-25 p-5 border border-dark m-5'>
+    <div className='login d-flex align-items-center justify-content-center'>
         <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
