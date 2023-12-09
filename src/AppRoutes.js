@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import EditBanner from "./components/pages/EditBanner";
 import AddProduct from "./components/pages/AddProduct";
 import EditProduct from "./components/pages/EditProduct";
+import ForgetPassword from "./components/pages/ForgetPassword";
 
 export default function AppRoutes() {
 
@@ -18,6 +19,7 @@ export default function AppRoutes() {
   <Routes>
           <Route path='/login' element={<ProtectedRoute shouldLoggedIn={false} component={Login}/>} />
           <Route path='/signup' element={<ProtectedRoute shouldLoggedIn={false} component={Signup}/>} />
+          <Route path='/forget-password' element={<ProtectedRoute shouldLoggedIn={false} component={ForgetPassword}/>} />
           <Route path='/' element={<ProtectedRoute shouldLoggedIn={true} component={DashboardLayout}/>}>
             <Route index element={<Navigate to='/dashboard' />} />
             <Route path='/dashboard' element={<Dashboard />} />

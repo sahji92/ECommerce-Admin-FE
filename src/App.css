@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+.signUp, .logIn, .forgetPassword {
+  background: linear-gradient(109.6deg, rgb(6, 183, 249) 11.2%, rgb(25, 74, 236) 91.1%);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

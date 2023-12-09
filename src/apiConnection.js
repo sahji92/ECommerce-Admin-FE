@@ -19,7 +19,10 @@ const apiConnection = async (endpoint, method, payload = null, headers = {}) => 
         console.log(res)
         return res
     })
-    .catch(err => console.log(err))
+    .catch(err =>{
+        console.log(err)
+        return err.response
+    })
 }
 
 export default apiConnection;

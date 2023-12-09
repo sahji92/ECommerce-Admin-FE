@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import apiConnection from '../../apiConnection';
@@ -13,7 +13,9 @@ export default function Signup() {
     email: '',
     password: ''
   })
+
   const navigate = useNavigate();
+
   const [showNotify,setShowNotify] = useState(false)
   const [notifyData,setNotifyData] = useState({
     type: '',
@@ -45,31 +47,35 @@ export default function Signup() {
   }
 
   return (
-    <div className='signUp d-flex align-items-center justify-content-center' style={{"min-height":"100vh"}}>
-        <Form>
-            <Form.Group className="mb-3" controlId="formName">
-                <Form.Label>Enter name</Form.Label>
-                <Form.Control name='name' type="text" placeholder="Enter name" onChange={(e) => setFormData(e)}/>
-            </Form.Group>
+    <div className='signUp'>
+      <div className='d-flex align-items-center justify-content-center' style={{"min-height": "100vh"}}>
+        <div className='p-5 card w-md-50'>
+            <Form>
+                <Form.Group className="mb-3" controlId="formName">
+                    <Form.Label>Enter name</Form.Label>
+                    <Form.Control name='name' type="text" placeholder="Enter name" onChange={(e) => setFormData(e)}/>
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control name='email' type="email" placeholder="Enter email" onChange={(e) => setFormData(e)}/>
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control name='email' type="email" placeholder="Enter email" onChange={(e) => setFormData(e)}/>
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control name='password' type="password" placeholder="Password" onChange={(e) => setFormData(e)}/>
-            </Form.Group>
-            <Button variant="primary" type="submit" onClick={(e) => registerUser(e)}>
-                Register
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control name='password' type="password" placeholder="Password" onChange={(e) => setFormData(e)}/>
+                </Form.Group>
+                <Button className='w-100' variant="primary" type="submit" onClick={(e) => registerUser(e)}>
+                    Register
+                </Button>
+            </Form>
+            <br></br>
+            <Button variant="info" type="submit" onClick={()=>navigate('/login')}>
+              Login
             </Button>
-        </Form>
-        <br></br>
-        <Button variant="info" type="submit" onClick={()=>navigate('/login')}>
-          Login
-        </Button>
-       { showNotify && <Notify message={notifyData.message} type={notifyData.type} setShowNotify={setShowNotify}/>}
+          { showNotify && <Notify message={notifyData.message} type={notifyData.type} setShowNotify={setShowNotify}/>}
+        </div>
+      </div>
     </div>
   )
-  }
+}
