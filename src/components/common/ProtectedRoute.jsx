@@ -3,7 +3,8 @@ import { Navigate } from "react-router-dom";
 import { getCookie } from "../../utils/getCookie";
 
 const ProtectedRoute = (props) => {
-    
+
+
   return (
     props.shouldLoggedIn?
          (getCookie('token')) ?
